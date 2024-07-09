@@ -6,8 +6,8 @@ tags:
     - FFMpeg
 ---
 
-2018-04-21: 更新至 ffmpeg-4.0
-2018-11-16: 更新腳本
+- 2018-04-21: 更新至 ffmpeg-4.0
+- 2018-11-16: 更新腳本
 
 >  使用AndroidStudio 开发 FFmpeg
 > Keywords: gradle, cmake
