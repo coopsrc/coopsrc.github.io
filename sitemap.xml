@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://coopsrc.github.io/2019/02/12/How-to-develop-ffmpeg-in-android-studio/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/2019/02/12/hello-world/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/2020/10/16/publish-android-library-to-nexus-repository/</loc>
+    
+    <lastmod>2024-07-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>http://coopsrc.github.io/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>http://coopsrc.github.io/tags/Android/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/tags/FFMpeg/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/tags/%E9%9A%8F%E7%AC%94/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/tags/maven/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://coopsrc.github.io/tags/nexus-oss/</loc>
+    <lastmod>2024-07-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+</urlset>
