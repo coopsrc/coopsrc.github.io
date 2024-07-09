@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Publish android library to nexus repository | Coopsrc Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="配置nexus 账户密码  NEXUS_REPOSITORY_URL NEXUS_USERNAME NEXUS_PASSWORD   配置library: Example: implementation &#39;com.example.utils:utils:1.0.2&#39;  version: 1.0.2 artifactId: utils groupId: com.example.ut">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Publish android library to nexus repository">
+<meta property="og:url" content="http://coopsrc.com/2020/10/16/publish-android-library-to-nexus-repository/index.html">
+<meta property="og:site_name" content="Coopsrc Blog">
+<meta property="og:description" content="配置nexus 账户密码  NEXUS_REPOSITORY_URL NEXUS_USERNAME NEXUS_PASSWORD   配置library: Example: implementation &#39;com.example.utils:utils:1.0.2&#39;  version: 1.0.2 artifactId: utils groupId: com.example.ut">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-10-16T06:42:45.000Z">
+<meta property="article:modified_time" content="2024-07-09T02:46:33.544Z">
+<meta property="article:author" content="Coopsrc">
+<meta property="article:tag" content="maven">
+<meta property="article:tag" content="nexus-oss">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Coopsrc Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Coopsrc Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">In me the tiger sniffs the rose.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://coopsrc.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-publish-android-library-to-nexus-repository" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/10/16/publish-android-library-to-nexus-repository/" class="article-date">
+  <time class="dt-published" datetime="2020-10-16T06:42:45.000Z" itemprop="datePublished">2020-10-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Publish android library to nexus repository
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>配置nexus 账户密码</p>
+<ul>
+<li>NEXUS_REPOSITORY_URL</li>
+<li>NEXUS_USERNAME</li>
+<li>NEXUS_PASSWORD</li>
+</ul>
+</li>
+<li><p>配置library: Example: <code>implementation &#39;com.example.utils:utils:1.0.2&#39;</code></p>
+<ul>
+<li>version: <code>1.0.2</code></li>
+<li>artifactId: <code>utils</code></li>
+<li>groupId: <code>com.example.utils</code></li>
+<li>packaging: <code>aar</code></li>
+</ul>
+</li>
+<li><p>创建 <code>nexus_upload.gradle</code> 脚本</p>
+</li>
+</ul>
+<span id="more"></span>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">apply <span class="attr">plugin:</span> <span class="string">&#x27;maven&#x27;</span></span><br><span class="line"></span><br><span class="line">task androidJavadocs(<span class="attr">type:</span> Javadoc) &#123;</span><br><span class="line">    options.encoding = <span class="string">&quot;utf-8&quot;</span></span><br><span class="line">    source = android.sourceSets.main.java.srcDirs</span><br><span class="line">    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task androidJavadocsJar(<span class="attr">type:</span> Jar, <span class="attr">dependsOn:</span> androidJavadocs) &#123;</span><br><span class="line">    classifier = <span class="string">&#x27;javadoc&#x27;</span></span><br><span class="line">    from androidJavadocs.destinationDir</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">task androidSourcesJar(<span class="attr">type:</span> Jar) &#123;</span><br><span class="line">    classifier = <span class="string">&#x27;sources&#x27;</span></span><br><span class="line">    from android.sourceSets.main.java.srcDirs</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">artifacts &#123;</span><br><span class="line">    archives androidSourcesJar</span><br><span class="line">    archives androidJavadocsJar</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">uploadArchives &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        mavenDeployer &#123;</span><br><span class="line">            repository(<span class="attr">url:</span> NEXUS_REPOSITORY_URL) &#123;</span><br><span class="line">                authentication(<span class="attr">userName:</span> NEXUS_USERNAME, <span class="attr">password:</span> NEXUS_PASSWORD)</span><br><span class="line">            &#125;</span><br><span class="line">            pom.project &#123;</span><br><span class="line">                name POM_NAME</span><br><span class="line">                version POM_VERSION</span><br><span class="line">                artifactId POM_ARTIFACTID</span><br><span class="line">                groupId POM_GROUPID</span><br><span class="line">                packaging POM_PACKAGING</span><br><span class="line">                description POM_DESCRIPTION</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在library module <code>build.gradle</code> 最后引入<code>apply from: &#39;nexus_upload.gradle&#39;</code></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://coopsrc.com/2020/10/16/publish-android-library-to-nexus-repository/" data-id="clyduonxk0008pyzv0gcncq41" data-title="Publish android library to nexus repository" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nexus-oss/" rel="tag">nexus-oss</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/02/12/How-to-develop-ffmpeg-in-android-studio/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">使用Android Studio开发FFmpeg的正确姿势</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFMpeg/" rel="tag">FFMpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-oss/" rel="tag">nexus-oss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/FFMpeg/" style="font-size: 10px;">FFMpeg</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/nexus-oss/" style="font-size: 10px;">nexus-oss</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/16/publish-android-library-to-nexus-repository/">Publish android library to nexus repository</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/12/How-to-develop-ffmpeg-in-android-studio/">使用Android Studio开发FFmpeg的正确姿势</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/12/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Coopsrc<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

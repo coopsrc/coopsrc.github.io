@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>使用Android Studio开发FFmpeg的正确姿势 | Coopsrc Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="2018-04-21: 更新至 ffmpeg-4.02018-11-16: 更新腳本   使用AndroidStudio 开发 FFmpegKeywords: gradle, cmake关键步骤，编译FFmpeg，Android Studio 集成。 abi support: armeabi-v7a arm64-v8a x86 x86_64ndk version android-ndk-r14b">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Android Studio开发FFmpeg的正确姿势">
+<meta property="og:url" content="http://coopsrc.com/2019/02/12/How-to-develop-ffmpeg-in-android-studio/index.html">
+<meta property="og:site_name" content="Coopsrc Blog">
+<meta property="og:description" content="2018-04-21: 更新至 ffmpeg-4.02018-11-16: 更新腳本   使用AndroidStudio 开发 FFmpegKeywords: gradle, cmake关键步骤，编译FFmpeg，Android Studio 集成。 abi support: armeabi-v7a arm64-v8a x86 x86_64ndk version android-ndk-r14b">
+<meta property="og:locale">
+<meta property="og:image" content="http://coopsrc.com/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/ffmpeg.png">
+<meta property="og:image" content="http://coopsrc.com/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/project.png">
+<meta property="og:image" content="http://coopsrc.com/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/preview.png">
+<meta property="article:published_time" content="2019-02-12T08:38:37.000Z">
+<meta property="article:modified_time" content="2024-07-09T02:46:33.544Z">
+<meta property="article:author" content="Coopsrc">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="FFMpeg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://coopsrc.com/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/ffmpeg.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Coopsrc Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Coopsrc Blog</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">In me the tiger sniffs the rose.</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Suche"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Suche"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://coopsrc.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-How-to-develop-ffmpeg-in-android-studio" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/02/12/How-to-develop-ffmpeg-in-android-studio/" class="article-date">
+  <time class="dt-published" datetime="2019-02-12T08:38:37.000Z" itemprop="datePublished">2019-02-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      使用Android Studio开发FFmpeg的正确姿势
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>2018-04-21: 更新至 ffmpeg-4.0<br>2018-11-16: 更新腳本</p>
+<blockquote>
+<p> 使用AndroidStudio 开发 FFmpeg<br>Keywords: gradle, cmake<br>关键步骤，编译FFmpeg，Android Studio 集成。</p>
+<p>abi support: <code>armeabi-v7a</code> <code>arm64-v8a</code> <code>x86</code> <code>x86_64</code><br>ndk version android-ndk-r14b</p>
+<p>export NDK_HOME&#x3D;&#x2F;opt&#x2F;android&#x2F;android-ndk-r14b<br>export HOST_PLATFORM&#x3D;linux-x86_64</p>
+</blockquote>
+<span id="more"></span>
+<h1 id="第一步，编译ffmpeg"><a href="#第一步，编译ffmpeg" class="headerlink" title="第一步，编译ffmpeg"></a>第一步，编译ffmpeg</h1><hr>
+<h4 id="首先下载并解压"><a href="#首先下载并解压" class="headerlink" title="首先下载并解压"></a>首先下载并解压</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget https://ffmpeg.org/releases/ffmpeg-4.0.tar.bz2</span><br><span class="line">tar xvf ffmpeg-4.0.tar.bz2</span><br></pre></td></tr></table></figure>
+<h4 id="然后编写编译脚本"><a href="#然后编写编译脚本" class="headerlink" title="然后编写编译脚本"></a>然后编写编译脚本</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/sh</span></span><br><span class="line"></span><br><span class="line">PREFIX=android-build</span><br><span class="line">HOST_PLATFORM=linux-x86_64</span><br><span class="line"></span><br><span class="line">COMMON_OPTIONS=&quot;\</span><br><span class="line">	--target-os=android \</span><br><span class="line">	--disable-static \</span><br><span class="line">	--enable-shared \</span><br><span class="line">	--enable-small \</span><br><span class="line">	--disable-programs \</span><br><span class="line">	--disable-ffmpeg \</span><br><span class="line">	--disable-ffplay \</span><br><span class="line">	--disable-ffprobe \</span><br><span class="line">	--disable-doc \</span><br><span class="line">	--disable-symver \</span><br><span class="line">	--disable-asm \</span><br><span class="line">	--enable-decoder=vorbis \</span><br><span class="line">	--enable-decoder=opus \</span><br><span class="line">	--enable-decoder=flac </span><br><span class="line">	&quot;</span><br><span class="line"></span><br><span class="line">build_all()&#123;</span><br><span class="line">	for version in armeabi-v7a arm64-v8a x86 x86_64; do</span><br><span class="line">		echo &quot;======== &gt; Start build $version&quot;</span><br><span class="line">		case $&#123;version&#125; in</span><br><span class="line">		armeabi-v7a )</span><br><span class="line">			ARCH=&quot;arm&quot;</span><br><span class="line">			CPU=&quot;armv7-a&quot;</span><br><span class="line">			CROSS_PREFIX=&quot;$NDK_HOME/toolchains/arm-linux-androideabi-4.9/prebuilt/$HOST_PLATFORM/bin/arm-linux-androideabi-&quot;</span><br><span class="line">			SYSROOT=&quot;$NDK_HOME/platforms/android-21/arch-arm/&quot;</span><br><span class="line">			EXTRA_CFLAGS=&quot;-march=armv7-a -mfpu=neon -mfloat-abi=softfp -mvectorize-with-neon-quad&quot;</span><br><span class="line">			EXTRA_LDFLAGS=&quot;-Wl,--fix-cortex-a8&quot;</span><br><span class="line">		;;</span><br><span class="line">		arm64-v8a )</span><br><span class="line">			ARCH=&quot;aarch64&quot;</span><br><span class="line">			CPU=&quot;armv8-a&quot;</span><br><span class="line">			CROSS_PREFIX=&quot;$NDK_HOME/toolchains/aarch64-linux-android-4.9/prebuilt/$HOST_PLATFORM/bin/aarch64-linux-android-&quot;</span><br><span class="line">			SYSROOT=&quot;$NDK_HOME/platforms/android-21/arch-arm64/&quot;</span><br><span class="line">			EXTRA_CFLAGS=&quot;&quot;</span><br><span class="line">			EXTRA_LDFLAGS=&quot;&quot;</span><br><span class="line">		;;</span><br><span class="line">		x86 )</span><br><span class="line">			ARCH=&quot;x86&quot;</span><br><span class="line">			CPU=&quot;i686&quot;</span><br><span class="line">			CROSS_PREFIX=&quot;$NDK_HOME/toolchains/x86-4.9/prebuilt/$HOST_PLATFORM/bin/i686-linux-android-&quot;</span><br><span class="line">			SYSROOT=&quot;$NDK_HOME/platforms/android-21/arch-x86/&quot;</span><br><span class="line">			EXTRA_CFLAGS=&quot;&quot;</span><br><span class="line">			EXTRA_LDFLAGS=&quot;&quot;</span><br><span class="line">		;;</span><br><span class="line">		x86_64 )</span><br><span class="line">			ARCH=&quot;x86_64&quot;</span><br><span class="line">			CPU=&quot;x86_64&quot;</span><br><span class="line">			CROSS_PREFIX=&quot;$NDK_HOME/toolchains/x86_64-4.9/prebuilt/$HOST_PLATFORM/bin/x86_64-linux-android-&quot;</span><br><span class="line">			SYSROOT=&quot;$NDK_HOME/platforms/android-21/arch-x86_64/&quot;</span><br><span class="line">			EXTRA_CFLAGS=&quot;&quot;</span><br><span class="line">			EXTRA_LDFLAGS=&quot;&quot;</span><br><span class="line">		;;</span><br><span class="line">		esac</span><br><span class="line"></span><br><span class="line">		echo &quot;-------- &gt; Start clean workspace&quot;</span><br><span class="line">		make clean</span><br><span class="line"></span><br><span class="line">		echo &quot;-------- &gt; Start config makefile&quot;</span><br><span class="line">		configuration=&quot;\</span><br><span class="line">            --prefix=$&#123;PREFIX&#125; \</span><br><span class="line">            --libdir=$&#123;PREFIX&#125;/libs/$&#123;version&#125;</span><br><span class="line">            --incdir=$&#123;PREFIX&#125;/includes/$&#123;version&#125; \</span><br><span class="line">            --pkgconfigdir=$&#123;PREFIX&#125;/pkgconfig/$&#123;version&#125; \</span><br><span class="line">            --arch=$&#123;ARCH&#125; \</span><br><span class="line">            --cpu=$&#123;CPU&#125; \</span><br><span class="line">            --cross-prefix=$&#123;CROSS_PREFIX&#125; \</span><br><span class="line">            --sysroot=$&#123;SYSROOT&#125; \</span><br><span class="line">            --extra-ldexeflags=-pie \</span><br><span class="line">            $&#123;COMMON_OPTIONS&#125;</span><br><span class="line">		    &quot;</span><br><span class="line"></span><br><span class="line">		echo &quot;-------- &gt; Start config makefile with $&#123;configuration&#125;&quot;</span><br><span class="line">		./configure $&#123;configuration&#125;</span><br><span class="line"></span><br><span class="line">		echo &quot;-------- &gt; Start make $&#123;version&#125; with -j8&quot;</span><br><span class="line">		make j8</span><br><span class="line"></span><br><span class="line">		echo &quot;-------- &gt; Start install $&#123;version&#125;&quot;</span><br><span class="line">		make install</span><br><span class="line">		echo &quot;++++++++ &gt; make and install $&#123;version&#125; complete.&quot;</span><br><span class="line"></span><br><span class="line">	done</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">echo &quot;-------- Start --------&quot;</span><br><span class="line">build_all</span><br><span class="line">echo &quot;-------- End --------&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>此脚本实现了<code>armeabi-v7a</code>,<code>arm64-v8a</code>,<code>x86</code>,<code>x86_64</code> 4个平台的编译。</p>
+<ul>
+<li>需要添加系统环境变量 <code>$NDK_PATH</code></li>
+<li><code>--target-os=android</code>指定<code>android</code>平台。</li>
+<li><code>make install-libs</code> 表示只安装<code>so</code>文件</li>
+</ul>
+<p>编译完成结果：<br><img src="/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/ffmpeg.png" alt="ffmpeg"></p>
+<h1 id="第二步，项目集成"><a href="#第二步，项目集成" class="headerlink" title="第二步，项目集成"></a>第二步，项目集成</h1><hr>
+<ul>
+<li>新建项目，增加<code>C++</code>支持。手动创建<code>jniLibs</code>文件夹</li>
+<li>然后将上一步生成的所有文件复制到<code>jniLibs</code>文件夹下面<br>最终目录结构：</li>
+</ul>
+<p><img src="/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/project.png" alt="Project"><br>然后修改<code>CMakeLists.txt</code>文件，集成<code>so</code>。</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">cmake_minimum_required</span>(VERSION <span class="number">3.4</span>.<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">find_library</span>(log-lib log)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(native-lib</span><br><span class="line">            SHARED</span><br><span class="line">            src/main/cpp/native-lib.cpp )</span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(JNI_LIBS_DIR <span class="variable">$&#123;CMAKE_SOURCE_DIR&#125;</span>/src/main/jniLibs)</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(avutil</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(avutil</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libavutil.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(swresample</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(swresample</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libswresample.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(swscale</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(swscale</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libswscale.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(avcodec</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(avcodec</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libavcodec.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(avformat</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(avformat</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libavformat.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(avfilter</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(avfilter</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libavfilter.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">add_library</span>(avdevice</span><br><span class="line">            SHARED</span><br><span class="line">            IMPORTED )</span><br><span class="line"><span class="keyword">set_target_properties</span>(avdevice</span><br><span class="line">                      PROPERTIES IMPORTED_LOCATION</span><br><span class="line">                      <span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/<span class="variable">$&#123;ANDROID_ABI&#125;</span>/libavdevice.so )</span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>(<span class="variable">$&#123;JNI_LIBS_DIR&#125;</span>/includes)</span><br><span class="line"></span><br><span class="line"><span class="keyword">target_link_libraries</span>(native-lib</span><br><span class="line">                      avutil swresample swscale avcodec avformat avfilter avdevice</span><br><span class="line">                      <span class="variable">$&#123;log-lib&#125;</span> )</span><br></pre></td></tr></table></figure>
+
+<p>简要说明：</p>
+<ul>
+<li><code>$&#123;ANDROID_ABI&#125;</code>表示目标ABI，在官方文档中有说明：<a target="_blank" rel="noopener" href="https://developer.android.com/ndk/guides/cmake.html">https://developer.android.com/ndk/guides/cmake.html</a></li>
+</ul>
+<p>最后再放出效果图：<br><img src="/assets/blogImg/How-to-develop-ffmpeg-in-android-studio/preview.png" alt="Preview"></p>
+<p>示例代码：<a target="_blank" rel="noopener" href="https://github.com/coopsrc/FFPlayerDemo">https://github.com/coopsrc/FFPlayerDemo</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://coopsrc.com/2019/02/12/How-to-develop-ffmpeg-in-android-studio/" data-id="clyduonxg0000pyzv8d1l8ksh" data-title="使用Android Studio开发FFmpeg的正确姿势" class="article-share-link"><span class="fa fa-share">Teilen</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FFMpeg/" rel="tag">FFMpeg</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/10/16/publish-android-library-to-nexus-repository/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Neuer</strong>
+      <div class="article-nav-title">
+        
+          Publish android library to nexus repository
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/12/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Älter</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFMpeg/" rel="tag">FFMpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nexus-oss/" rel="tag">nexus-oss</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 10px;">Android</a> <a href="/tags/FFMpeg/" style="font-size: 10px;">FFMpeg</a> <a href="/tags/maven/" style="font-size: 10px;">maven</a> <a href="/tags/nexus-oss/" style="font-size: 10px;">nexus-oss</a> <a href="/tags/%E9%9A%8F%E7%AC%94/" style="font-size: 10px;">随笔</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archiv</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">letzter Beitrag</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/16/publish-android-library-to-nexus-repository/">Publish android library to nexus repository</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/12/How-to-develop-ffmpeg-in-android-studio/">使用Android Studio开发FFmpeg的正确姿势</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/12/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 Coopsrc<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
